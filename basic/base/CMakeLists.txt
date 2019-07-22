@@ -1,0 +1,515 @@
+#
+# Copyright 2017 The Basic Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+basic_cc_library(
+  NAME
+    atomic_hook
+  HDRS
+    "internal/atomic_hook.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+)
+
+basic_cc_library(
+  NAME
+    log_severity
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+) 
+
+basic_cc_library(
+  NAME
+    spinlock_wait
+  HDRS
+    "internal/scheduling_mode.h"
+    "internal/spinlock_wait.h"
+  SRCS
+    "internal/spinlock_akaros.inc"
+    "internal/spinlock_linux.inc"
+    "internal/spinlock_posix.inc"
+    "internal/spinlock_wait.cc"
+    "internal/spinlock_win32.inc"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::core_headers
+)
+
+basic_cc_library(
+  NAME
+    config
+  HDRS
+    "config.h"
+    "policy_checks.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  PUBLIC
+)
+
+basic_cc_library(
+  NAME
+    dynamic_annotations
+  HDRS
+    "dynamic_annotations.h"
+  SRCS
+    "dynamic_annotations.cc"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEFINES
+    "__CLANG_SUPPORT_DYN_ANNOTATION__"
+  PUBLIC
+)
+
+basic_cc_library(
+  NAME
+    core_headers
+  HDRS
+    "attributes.h"
+    "const_init.h"
+    "macros.h"
+    "optimization.h"
+    "port.h"
+    "thread_annotations.h"
+    "internal/thread_annotations.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::config
+  PUBLIC
+)
+
+basic_cc_library(
+  NAME
+    malloc_internal
+  HDRS
+    "internal/direct_mmap.h"
+    "internal/low_level_alloc.h"
+  SRCS
+    "internal/low_level_alloc.cc"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::base
+    basic::config
+    basic::core_headers
+    basic::dynamic_annotations
+    basic::spinlock_wait
+    Threads::Threads
+)
+
+basic_cc_library(
+  NAME
+    base_internal
+  HDRS
+    "internal/hide_ptr.h"
+    "internal/identity.h"
+    "internal/inline_variable.h"
+    "internal/invoke.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+)
+
+basic_cc_library(
+  NAME
+    base
+  HDRS
+    "call_once.h"
+    "casts.h"
+    "internal/cycleclock.h"
+    "internal/low_level_scheduling.h"
+    "internal/per_thread_tls.h"
+    "internal/raw_logging.h"
+    "internal/spinlock.h"
+    "internal/sysinfo.h"
+    "internal/thread_identity.h"
+    "internal/tsan_mutex_interface.h"
+    "internal/unscaledcycleclock.h"
+    "log_severity.h"
+  SRCS
+    "internal/cycleclock.cc"
+    "internal/raw_logging.cc"
+    "internal/spinlock.cc"
+    "internal/sysinfo.cc"
+    "internal/thread_identity.cc"
+    "internal/unscaledcycleclock.cc"
+    "log_severity.cc"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::atomic_hook
+    basic::base_internal
+    basic::config
+    basic::core_headers
+    basic::dynamic_annotations
+    basic::spinlock_wait
+    basic::type_traits
+    Threads::Threads
+  PUBLIC
+)
+
+basic_cc_library(
+  NAME
+    throw_delegate
+  HDRS
+    "internal/throw_delegate.h"
+  SRCS
+    "internal/throw_delegate.cc"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  DEPS
+    basic::base
+)
+
+basic_cc_library(
+  NAME
+    exception_testing
+  HDRS
+    "internal/exception_testing.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::config
+    gtest
+  TESTONLY
+)
+
+basic_cc_library(
+  NAME
+    pretty_function
+  HDRS
+    "internal/pretty_function.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+)
+
+basic_cc_library(
+  NAME
+    exception_safety_testing
+  HDRS
+    "internal/exception_safety_testing.h"
+  SRCS
+    "internal/exception_safety_testing.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::config
+    basic::pretty_function
+    basic::memory
+    basic::meta
+    basic::strings
+    basic::utility
+    gtest
+  TESTONLY
+)
+
+basic_cc_test(
+  NAME
+    basic_exception_safety_testing_test
+  SRCS
+    "exception_safety_testing_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::exception_safety_testing
+    basic::memory
+    gtest_main
+)
+
+basic_cc_test(
+  NAME
+    atomic_hook_test
+  SRCS
+    "internal/atomic_hook_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::atomic_hook
+    basic::core_headers
+    gtest_main
+)
+
+basic_cc_test(
+  NAME
+    bit_cast_test
+  SRCS
+    "bit_cast_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::base
+    basic::core_headers
+    gtest_main
+)
+
+basic_cc_test(
+  NAME
+    throw_delegate_test
+  SRCS
+    "throw_delegate_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::base
+    basic::throw_delegate
+    gtest_main
+)
+
+basic_cc_test(
+  NAME
+    inline_variable_test
+  SRCS
+    "internal/inline_variable_testing.h"
+    "inline_variable_test.cc"
+    "inline_variable_test_a.cc"
+    "inline_variable_test_b.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::base_internal
+    gtest_main
+)
+
+basic_cc_test(
+  NAME
+    invoke_test
+  SRCS
+    "invoke_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::base_internal
+    basic::memory
+    basic::strings
+    gmock
+    gtest_main
+)
+
+basic_cc_library(
+  NAME
+    spinlock_test_common
+  SRCS
+    "spinlock_test_common.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::base
+    basic::core_headers
+    basic::spinlock_wait
+    basic::synchronization
+    gtest
+  TESTONLY
+)
+
+# On bazel BUILD this target use "alwayslink = 1" which is not implemented here
+basic_cc_test(
+  NAME
+    spinlock_test
+  SRCS
+    "spinlock_test_common.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::base
+    basic::core_headers
+    basic::spinlock_wait
+    basic::synchronization
+    gtest_main
+)
+
+basic_cc_library(
+  NAME
+    endian
+  HDRS
+    "internal/endian.h"
+    "internal/unaligned_access.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::config
+    basic::core_headers
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    endian_test
+  SRCS
+    "internal/endian_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::base
+    basic::config
+    basic::endian
+    gtest_main
+)
+
+basic_cc_test(
+  NAME
+    config_test
+  SRCS
+    "config_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::config
+    basic::synchronization
+    gtest_main
+)
+
+basic_cc_test(
+  NAME
+    call_once_test
+  SRCS
+    "call_once_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::base
+    basic::core_headers
+    basic::synchronization
+    gtest_main
+)
+
+basic_cc_test(
+  NAME
+    raw_logging_test
+  SRCS
+    "raw_logging_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::base
+    basic::strings
+    gtest_main
+)
+
+basic_cc_test(
+  NAME
+    sysinfo_test
+  SRCS
+    "internal/sysinfo_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::base
+    basic::synchronization
+    gtest_main
+)
+
+basic_cc_test(
+  NAME
+    low_level_alloc_test
+  SRCS
+    "internal/low_level_alloc_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::malloc_internal
+    Threads::Threads
+)
+
+basic_cc_test(
+  NAME
+    thread_identity_test
+  SRCS
+    "internal/thread_identity_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::base
+    basic::core_headers
+    basic::synchronization
+    Threads::Threads
+    gtest_main
+)
+
+basic_cc_library(
+  NAME
+    bits
+  HDRS
+    "internal/bits.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::core_headers
+)
+
+basic_cc_test(
+  NAME
+    bits_test
+  SRCS
+    "internal/bits_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::bits
+    gtest_main
+)
+
+basic_cc_library(
+  NAME
+    scoped_set_env
+  SRCS
+    "internal/scoped_set_env.cc"
+  HDRS
+    "internal/scoped_set_env.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::base
+)
+
+basic_cc_test(
+  NAME
+    scoped_set_env_test
+  SRCS
+    "internal/scoped_set_env_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::scoped_set_env
+    gtest_main
+)
+
+basic_cc_test(
+  NAME
+    cmake_thread_test
+  SRCS
+    "internal/cmake_thread_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::base
+)
+
+basic_cc_test(
+  NAME
+    log_severity_test
+  SRCS
+    "log_severity_test.cc"
+  DEPS
+    basic::base
+    gmock
+    gtest_main
+)

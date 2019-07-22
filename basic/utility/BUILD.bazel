@@ -1,0 +1,36 @@
+load(
+    "//basic:copts/configure_copts.bzl",
+    "ABSL_DEFAULT_COPTS",
+    "ABSL_DEFAULT_LINKOPTS",
+    "ABSL_TEST_COPTS",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+licenses(["notice"])  # Apache 2.0
+
+cc_library(
+    name = "utility",
+    hdrs = ["utility.h"],
+    copts = ABSL_DEFAULT_COPTS,
+    linkopts = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        "//basic/base:base_internal",
+        "//basic/base:config",
+        "//basic/meta:type_traits",
+    ],
+)
+
+cc_test(
+    name = "utility_test",
+    srcs = ["utility_test.cc"],
+    copts = ABSL_TEST_COPTS,
+    linkopts = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":utility",
+        "//basic/base:core_headers",
+        "//basic/memory",
+        "//basic/strings",
+        "@com_google_googletest//:gtest_main",
+    ],
+)

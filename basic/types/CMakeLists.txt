@@ -1,0 +1,348 @@
+#
+# Copyright 2017 The Basic Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+basic_cc_library(
+  NAME
+    any
+  HDRS
+    "any.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::bad_any_cast
+    basic::config
+    basic::core_headers
+    basic::type_traits
+    basic::utility
+  PUBLIC
+)
+
+basic_cc_library(
+  NAME
+    bad_any_cast
+  HDRS
+   "bad_any_cast.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::bad_any_cast_impl
+    basic::config
+  PUBLIC
+)
+
+basic_cc_library(
+  NAME
+    bad_any_cast_impl
+  SRCS
+   "bad_any_cast.h"
+   "bad_any_cast.cc"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::base
+    basic::config
+)
+
+basic_cc_test(
+  NAME
+    any_test
+  SRCS
+    "any_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::any
+    basic::base
+    basic::config
+    basic::exception_testing
+    basic::test_instance_tracker
+    gmock_main
+)
+
+basic_cc_test(
+  NAME
+    any_test_noexceptions
+  SRCS
+    "any_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::any
+    basic::base
+    basic::config
+    basic::exception_testing
+    basic::test_instance_tracker
+    gmock_main
+)
+
+basic_cc_test(
+  NAME
+    any_exception_safety_test
+  SRCS
+    "any_exception_safety_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::any
+    basic::exception_safety_testing
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    span
+  HDRS
+    "span.h"
+  SRCS
+    "internal/span.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::algorithm
+    basic::core_headers
+    basic::throw_delegate
+    basic::type_traits
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    span_test
+  SRCS
+    "span_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::span
+    basic::base
+    basic::config
+    basic::core_headers
+    basic::exception_testing
+    basic::fixed_array
+    basic::inlined_vector
+    basic::hash_testing
+    basic::strings
+    gmock_main
+)
+
+basic_cc_test(
+  NAME
+    span_test_noexceptions
+  SRCS
+    "span_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::span
+    basic::base
+    basic::config
+    basic::core_headers
+    basic::exception_testing
+    basic::fixed_array
+    basic::inlined_vector
+    basic::hash_testing
+    basic::strings
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    optional
+  HDRS
+    "optional.h"
+  SRCS
+    "internal/optional.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::bad_optional_access
+    basic::base_internal
+    basic::config
+    basic::core_headers
+    basic::memory
+    basic::type_traits
+    basic::utility
+  PUBLIC
+)
+
+basic_cc_library(
+  NAME
+    bad_optional_access
+  HDRS
+    "bad_optional_access.h"
+  SRCS
+    "bad_optional_access.cc"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::base
+    basic::config
+  PUBLIC
+)
+
+basic_cc_library(
+  NAME
+    bad_variant_access
+  HDRS
+    "bad_variant_access.h"
+  SRCS
+    "bad_variant_access.cc"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::base
+    basic::config
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    optional_test
+  SRCS
+    "optional_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::optional
+    basic::base
+    basic::config
+    basic::type_traits
+    basic::strings
+    gmock_main
+)
+
+basic_cc_test(
+  NAME
+    optional_exception_safety_test
+  SRCS
+    "optional_exception_safety_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::optional
+    basic::exception_safety_testing
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    variant
+  HDRS
+    "variant.h"
+  SRCS
+    "internal/variant.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::bad_variant_access
+    basic::base_internal
+    basic::config
+    basic::core_headers
+    basic::type_traits
+    basic::utility
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    variant_test
+  SRCS
+    "variant_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::variant
+    basic::config
+    basic::core_headers
+    basic::memory
+    basic::type_traits
+    basic::strings
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    compare
+  HDRS
+    "compare.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::core_headers
+    basic::type_traits
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    compare_test
+  SRCS
+    "compare_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::base
+    basic::compare
+    gmock_main
+)
+
+# TODO(cohenjon,zhangxy) Figure out why this test is failing on gcc 4.8
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.9)
+else()
+basic_cc_test(
+  NAME
+    variant_exception_safety_test
+  SRCS
+    "variant_exception_safety_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::variant
+    basic::config
+    basic::exception_safety_testing
+    basic::memory
+    gmock_main
+)
+endif()
