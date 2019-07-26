@@ -1,0 +1,22 @@
+﻿{
+  "configurations": [
+    {
+      "name": "x86",
+      "generator": "Visual Studio 14 2015",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "buildRoot": "${projectDir}\\build\\${name}",
+      "installRoot": "${projectDir}\\install\\${name}",
+      "cmakeCommandArgs": "-T v140_xp",
+      "buildCommandArgs": "-v::minimal -m:8",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "CMAKE_VERBOSE_MAKEFILE",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
+    }
+  ]
+}

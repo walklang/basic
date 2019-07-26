@@ -1,0 +1,334 @@
+#
+# Copyright 2017 The Basic Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+load(
+    "//basic:copts/configure_copts.bzl",
+    "ABSL_DEFAULT_COPTS",
+    "ABSL_DEFAULT_LINKOPTS",
+    "ABSL_EXCEPTIONS_FLAG",
+    "ABSL_EXCEPTIONS_FLAG_LINKOPTS",
+    "ABSL_TEST_COPTS",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+licenses(["notice"])  # Apache 2.0
+
+cc_library(
+    name = "any",
+    hdrs = ["any.h"],
+    copts = ABSL_DEFAULT_COPTS,
+    linkopts = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":bad_any_cast",
+        "//basic/base:config",
+        "//basic/base:core_headers",
+        "//basic/meta:type_traits",
+        "//basic/utility",
+    ],
+)
+
+cc_library(
+    name = "bad_any_cast",
+    hdrs = ["bad_any_cast.h"],
+    copts = ABSL_DEFAULT_COPTS,
+    linkopts = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":bad_any_cast_impl",
+        "//basic/base:config",
+    ],
+)
+
+cc_library(
+    name = "bad_any_cast_impl",
+    srcs = [
+        "bad_any_cast.cc",
+        "bad_any_cast.h",
+    ],
+    copts = ABSL_EXCEPTIONS_FLAG + ABSL_DEFAULT_COPTS,
+    linkopts = ABSL_EXCEPTIONS_FLAG_LINKOPTS + ABSL_DEFAULT_LINKOPTS,
+    visibility = ["//visibility:private"],
+    deps = [
+        "//basic/base",
+        "//basic/base:config",
+    ],
+)
+
+cc_test(
+    name = "any_test",
+    size = "small",
+    srcs = [
+        "any_test.cc",
+    ],
+    copts = ABSL_TEST_COPTS + ABSL_EXCEPTIONS_FLAG,
+    linkopts = ABSL_EXCEPTIONS_FLAG_LINKOPTS + ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":any",
+        "//basic/base",
+        "//basic/base:config",
+        "//basic/base:exception_testing",
+        "//basic/container:test_instance_tracker",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "any_test_noexceptions",
+    size = "small",
+    srcs = [
+        "any_test.cc",
+    ],
+    copts = ABSL_TEST_COPTS,
+    linkopts = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":any",
+        "//basic/base",
+        "//basic/base:config",
+        "//basic/base:exception_testing",
+        "//basic/container:test_instance_tracker",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "any_exception_safety_test",
+    srcs = ["any_exception_safety_test.cc"],
+    copts = ABSL_TEST_COPTS + ABSL_EXCEPTIONS_FLAG,
+    linkopts = ABSL_EXCEPTIONS_FLAG_LINKOPTS + ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":any",
+        "//basic/base:exception_safety_testing",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_library(
+    name = "span",
+    srcs = [
+        "internal/span.h",
+    ],
+    hdrs = [
+        "span.h",
+    ],
+    copts = ABSL_DEFAULT_COPTS,
+    linkopts = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        "//basic/algorithm",
+        "//basic/base:core_headers",
+        "//basic/base:throw_delegate",
+        "//basic/meta:type_traits",
+    ],
+)
+
+cc_test(
+    name = "span_test",
+    size = "small",
+    srcs = ["span_test.cc"],
+    copts = ABSL_TEST_COPTS + ABSL_EXCEPTIONS_FLAG,
+    linkopts = ABSL_EXCEPTIONS_FLAG_LINKOPTS + ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":span",
+        "//basic/base:config",
+        "//basic/base:core_headers",
+        "//basic/base:exception_testing",
+        "//basic/container:fixed_array",
+        "//basic/container:inlined_vector",
+        "//basic/hash:hash_testing",
+        "//basic/strings",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "span_test_noexceptions",
+    size = "small",
+    srcs = ["span_test.cc"],
+    copts = ABSL_TEST_COPTS,
+    linkopts = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":span",
+        "//basic/base:config",
+        "//basic/base:core_headers",
+        "//basic/base:exception_testing",
+        "//basic/container:fixed_array",
+        "//basic/container:inlined_vector",
+        "//basic/hash:hash_testing",
+        "//basic/strings",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_library(
+    name = "optional",
+    srcs = ["internal/optional.h"],
+    hdrs = ["optional.h"],
+    copts = ABSL_DEFAULT_COPTS,
+    linkopts = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":bad_optional_access",
+        "//basic/base:base_internal",
+        "//basic/base:config",
+        "//basic/base:core_headers",
+        "//basic/memory",
+        "//basic/meta:type_traits",
+        "//basic/utility",
+    ],
+)
+
+cc_library(
+    name = "bad_optional_access",
+    srcs = ["bad_optional_access.cc"],
+    hdrs = ["bad_optional_access.h"],
+    copts = ABSL_DEFAULT_COPTS + ABSL_EXCEPTIONS_FLAG,
+    linkopts = ABSL_EXCEPTIONS_FLAG_LINKOPTS + ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        "//basic/base",
+        "//basic/base:config",
+    ],
+)
+
+cc_library(
+    name = "bad_variant_access",
+    srcs = ["bad_variant_access.cc"],
+    hdrs = ["bad_variant_access.h"],
+    copts = ABSL_EXCEPTIONS_FLAG + ABSL_DEFAULT_COPTS,
+    linkopts = ABSL_EXCEPTIONS_FLAG_LINKOPTS + ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        "//basic/base",
+        "//basic/base:config",
+    ],
+)
+
+cc_test(
+    name = "optional_test",
+    size = "small",
+    srcs = [
+        "optional_test.cc",
+    ],
+    copts = ABSL_TEST_COPTS + ABSL_EXCEPTIONS_FLAG,
+    linkopts = ABSL_EXCEPTIONS_FLAG_LINKOPTS + ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":optional",
+        "//basic/base",
+        "//basic/base:config",
+        "//basic/meta:type_traits",
+        "//basic/strings",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "optional_exception_safety_test",
+    srcs = [
+        "optional_exception_safety_test.cc",
+    ],
+    copts = ABSL_TEST_COPTS + ABSL_EXCEPTIONS_FLAG,
+    linkopts = ABSL_EXCEPTIONS_FLAG_LINKOPTS + ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":optional",
+        "//basic/base:exception_safety_testing",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_library(
+    name = "variant",
+    srcs = ["internal/variant.h"],
+    hdrs = ["variant.h"],
+    copts = ABSL_DEFAULT_COPTS,
+    linkopts = ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":bad_variant_access",
+        "//basic/base:base_internal",
+        "//basic/base:config",
+        "//basic/base:core_headers",
+        "//basic/meta:type_traits",
+        "//basic/utility",
+    ],
+)
+
+cc_test(
+    name = "variant_test",
+    size = "small",
+    srcs = ["variant_test.cc"],
+    copts = ABSL_TEST_COPTS + ABSL_EXCEPTIONS_FLAG,
+    linkopts = ABSL_EXCEPTIONS_FLAG_LINKOPTS + ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":variant",
+        "//basic/base:config",
+        "//basic/base:core_headers",
+        "//basic/memory",
+        "//basic/meta:type_traits",
+        "//basic/strings",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "variant_benchmark",
+    srcs = [
+        "variant_benchmark.cc",
+    ],
+    copts = ABSL_TEST_COPTS,
+    linkopts = ABSL_DEFAULT_LINKOPTS,
+    tags = ["benchmark"],
+    deps = [
+        ":variant",
+        "//basic/utility",
+        "@com_github_google_benchmark//:benchmark_main",
+    ],
+)
+
+cc_test(
+    name = "variant_exception_safety_test",
+    size = "small",
+    srcs = [
+        "variant_exception_safety_test.cc",
+    ],
+    copts = ABSL_TEST_COPTS + ABSL_EXCEPTIONS_FLAG,
+    linkopts = ABSL_EXCEPTIONS_FLAG_LINKOPTS + ABSL_DEFAULT_LINKOPTS,
+    deps = [
+        ":variant",
+        "//basic/base:config",
+        "//basic/base:exception_safety_testing",
+        "//basic/memory",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_library(
+    name = "compare",
+    hdrs = ["compare.h"],
+    copts = ABSL_DEFAULT_COPTS,
+    deps = [
+        "//basic/base:core_headers",
+        "//basic/meta:type_traits",
+    ],
+)
+
+cc_test(
+    name = "compare_test",
+    size = "small",
+    srcs = [
+        "compare_test.cc",
+    ],
+    copts = ABSL_TEST_COPTS,
+    deps = [
+        ":compare",
+        "//basic/base",
+        "@com_google_googletest//:gtest_main",
+    ],
+)

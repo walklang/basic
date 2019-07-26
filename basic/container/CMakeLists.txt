@@ -1,0 +1,852 @@
+#
+# Copyright 2017 The Basic Authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# This is deprecated and will be removed in the future.  It also doesn't do
+# anything anyways.  Prefer to use the library associated with the API you are
+# using.
+basic_cc_library(
+  NAME
+    container
+  PUBLIC
+)
+
+basic_cc_library(
+  NAME
+    compressed_tuple
+  HDRS
+    "internal/compressed_tuple.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::utility
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    compressed_tuple_test
+  SRCS
+    "internal/compressed_tuple_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::any
+    basic::compressed_tuple
+    basic::memory
+    basic::optional
+    basic::test_instance_tracker
+    basic::utility
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    fixed_array
+  HDRS
+   "fixed_array.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::compressed_tuple
+    basic::algorithm
+    basic::core_headers
+    basic::dynamic_annotations
+    basic::throw_delegate
+    basic::memory
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    fixed_array_test
+  SRCS
+    "fixed_array_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::fixed_array
+    basic::exception_testing
+    basic::hash_testing
+    basic::memory
+    gmock_main
+)
+
+basic_cc_test(
+  NAME
+    fixed_array_test_noexceptions
+  SRCS
+    "fixed_array_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::fixed_array
+    basic::exception_testing
+    basic::hash_testing
+    basic::memory
+    gmock_main
+)
+
+basic_cc_test(
+  NAME
+    fixed_array_exception_safety_test
+  SRCS
+    "fixed_array_exception_safety_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::fixed_array
+    basic::exception_safety_testing
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    inlined_vector_internal
+  HDRS
+   "internal/inlined_vector.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::compressed_tuple
+    basic::core_headers
+    basic::memory
+    basic::span
+    basic::type_traits
+  PUBLIC
+)
+
+basic_cc_library(
+  NAME
+    inlined_vector
+  HDRS
+   "inlined_vector.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::algorithm
+    basic::core_headers
+    basic::inlined_vector_internal
+    basic::throw_delegate
+    basic::memory
+  PUBLIC
+)
+
+basic_cc_library(
+  NAME
+    counting_allocator
+  HDRS
+    "internal/counting_allocator.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+)
+
+basic_cc_test(
+  NAME
+    inlined_vector_test
+  SRCS
+    "inlined_vector_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::counting_allocator
+    basic::inlined_vector
+    basic::test_instance_tracker
+    basic::base
+    basic::core_headers
+    basic::exception_testing
+    basic::hash_testing
+    basic::memory
+    basic::strings
+    gmock_main
+)
+
+basic_cc_test(
+  NAME
+    inlined_vector_test_noexceptions
+  SRCS
+    "inlined_vector_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::inlined_vector
+    basic::test_instance_tracker
+    basic::base
+    basic::core_headers
+    basic::exception_testing
+    basic::hash_testing
+    basic::memory
+    basic::strings
+    gmock_main
+)
+
+basic_cc_test(
+  NAME
+    inlined_vector_exception_safety_test
+  SRCS
+    "inlined_vector_exception_safety_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+    ${ABSL_EXCEPTIONS_FLAG}
+  LINKOPTS
+    ${ABSL_EXCEPTIONS_FLAG_LINKOPTS}
+  DEPS
+    basic::inlined_vector
+    basic::exception_safety_testing
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    test_instance_tracker
+  HDRS
+    "internal/test_instance_tracker.h"
+  SRCS
+    "internal/test_instance_tracker.cc"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::compare
+  TESTONLY
+)
+
+basic_cc_test(
+  NAME
+    test_instance_tracker_test
+  SRCS
+    "internal/test_instance_tracker_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::test_instance_tracker
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    flat_hash_map
+  HDRS
+    "flat_hash_map.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::container_memory
+    basic::hash_function_defaults
+    basic::raw_hash_map
+    basic::algorithm_container
+    basic::memory
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    flat_hash_map_test
+  SRCS
+    "flat_hash_map_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::flat_hash_map
+    basic::hash_generator_testing
+    basic::unordered_map_constructor_test
+    basic::unordered_map_lookup_test
+    basic::unordered_map_members_test
+    basic::unordered_map_modifiers_test
+    basic::any
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    flat_hash_set
+  HDRS
+    "flat_hash_set.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::container_memory
+    basic::hash_function_defaults
+    basic::raw_hash_set
+    basic::algorithm_container
+    basic::core_headers
+    basic::memory
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    flat_hash_set_test
+  SRCS
+    "flat_hash_set_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+    "-DUNORDERED_SET_CXX17"
+  DEPS
+    basic::flat_hash_set
+    basic::hash_generator_testing
+    basic::unordered_set_constructor_test
+    basic::unordered_set_lookup_test
+    basic::unordered_set_members_test
+    basic::unordered_set_modifiers_test
+    basic::memory
+    basic::strings
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    node_hash_map
+  HDRS
+    "node_hash_map.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::container_memory
+    basic::hash_function_defaults
+    basic::node_hash_policy
+    basic::raw_hash_map
+    basic::algorithm_container
+    basic::memory
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    node_hash_map_test
+  SRCS
+    "node_hash_map_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::hash_generator_testing
+    basic::node_hash_map
+    basic::tracked
+    basic::unordered_map_constructor_test
+    basic::unordered_map_lookup_test
+    basic::unordered_map_members_test
+    basic::unordered_map_modifiers_test
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    node_hash_set
+  HDRS
+    "node_hash_set.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::hash_function_defaults
+    basic::node_hash_policy
+    basic::raw_hash_set
+    basic::algorithm_container
+    basic::memory
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    node_hash_set_test
+  SRCS
+    "node_hash_set_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+    "-DUNORDERED_SET_CXX17"
+  DEPS
+    basic::hash_generator_testing
+    basic::node_hash_set
+    basic::unordered_set_constructor_test
+    basic::unordered_set_lookup_test
+    basic::unordered_set_members_test
+    basic::unordered_set_modifiers_test
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    container_memory
+  HDRS
+    "internal/container_memory.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::memory
+    basic::utility
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    container_memory_test
+  SRCS
+    "internal/container_memory_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::container_memory
+    basic::strings
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    hash_function_defaults
+  HDRS
+    "internal/hash_function_defaults.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::config
+    basic::hash
+    basic::strings
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    hash_function_defaults_test
+  SRCS
+    "internal/hash_function_defaults_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::hash_function_defaults
+    basic::hash
+    basic::strings
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    hash_generator_testing
+  HDRS
+    "internal/hash_generator_testing.h"
+  SRCS
+    "internal/hash_generator_testing.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::hash_policy_testing
+    basic::meta
+    basic::strings
+  TESTONLY
+)
+
+basic_cc_library(
+  NAME
+    hash_policy_testing
+  HDRS
+    "internal/hash_policy_testing.h"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::hash
+    basic::strings
+  TESTONLY
+)
+
+basic_cc_test(
+  NAME
+    hash_policy_testing_test
+  SRCS
+    "internal/hash_policy_testing_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::hash_policy_testing
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    hash_policy_traits
+  HDRS
+    "internal/hash_policy_traits.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::meta
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    hash_policy_traits_test
+  SRCS
+    "internal/hash_policy_traits_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::hash_policy_traits
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    hashtablez_sampler
+  HDRS
+    "internal/hashtablez_sampler.h"
+  SRCS
+    "internal/hashtablez_sampler.cc"
+    "internal/hashtablez_sampler_force_weak_definition.cc"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::base
+    basic::have_sse
+    basic::synchronization
+)
+
+basic_cc_test(
+  NAME
+    hashtablez_sampler_test
+  SRCS
+    "internal/hashtablez_sampler_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::hashtablez_sampler
+    basic::have_sse
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    hashtable_debug
+  HDRS
+    "internal/hashtable_debug.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::hashtable_debug_hooks
+)
+
+basic_cc_library(
+  NAME
+    hashtable_debug_hooks
+  HDRS
+    "internal/hashtable_debug_hooks.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  PUBLIC
+)
+
+basic_cc_library(
+  NAME
+    have_sse
+  HDRS
+    "internal/have_sse.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+)
+
+basic_cc_library(
+  NAME
+    node_hash_policy
+  HDRS
+    "internal/node_hash_policy.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    node_hash_policy_test
+  SRCS
+    "internal/node_hash_policy_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::hash_policy_traits
+    basic::node_hash_policy
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    raw_hash_map
+  HDRS
+    "internal/raw_hash_map.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::container_memory
+    basic::raw_hash_set
+  PUBLIC
+)
+
+basic_cc_library(
+  NAME
+    container_common
+  HDRS
+    "internal/commom.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::type_traits
+)
+
+basic_cc_library(
+  NAME
+    raw_hash_set
+  HDRS
+    "internal/raw_hash_set.h"
+  SRCS
+    "internal/raw_hash_set.cc"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::bits
+    basic::compressed_tuple
+    basic::config
+    basic::container_common
+    basic::container_memory
+    basic::core_headers
+    basic::endian
+    basic::hash_policy_traits
+    basic::hashtable_debug_hooks
+    basic::have_sse
+    basic::layout
+    basic::memory
+    basic::meta
+    basic::optional
+    basic::utility
+    basic::hashtablez_sampler
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    raw_hash_set_test
+  SRCS
+    "internal/raw_hash_set_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::container_memory
+    basic::hash_function_defaults
+    basic::hash_policy_testing
+    basic::hashtable_debug
+    basic::raw_hash_set
+    basic::base
+    basic::core_headers
+    basic::strings
+    gmock_main
+)
+
+basic_cc_test(
+  NAME
+    raw_hash_set_allocator_test
+  SRCS
+    "internal/raw_hash_set_allocator_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::raw_hash_set
+    basic::tracked
+    basic::core_headers
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    layout
+  HDRS
+    "internal/layout.h"
+  COPTS
+    ${ABSL_DEFAULT_COPTS}
+  DEPS
+    basic::core_headers
+    basic::meta
+    basic::strings
+    basic::span
+    basic::utility
+  PUBLIC
+)
+
+basic_cc_test(
+  NAME
+    layout_test
+  SRCS
+    "internal/layout_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::layout
+    basic::base
+    basic::core_headers
+    basic::span
+    gmock_main
+)
+
+basic_cc_library(
+  NAME
+    tracked
+  HDRS
+    "internal/tracked.h"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  TESTONLY
+)
+
+basic_cc_library(
+  NAME
+    unordered_map_constructor_test
+  HDRS
+    "internal/unordered_map_constructor_test.h"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::hash_generator_testing
+    basic::hash_policy_testing
+    gmock
+  TESTONLY
+)
+
+basic_cc_library(
+  NAME
+    unordered_map_lookup_test
+  HDRS
+    "internal/unordered_map_lookup_test.h"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::hash_generator_testing
+    basic::hash_policy_testing
+    gmock
+  TESTONLY
+)
+
+basic_cc_library(
+  NAME
+    unordered_map_members_test
+  HDRS
+    "internal/unordered_map_members_test.h"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::type_traits
+    gmock
+  TESTONLY
+)
+
+basic_cc_library(
+  NAME
+    unordered_map_modifiers_test
+  HDRS
+    "internal/unordered_map_modifiers_test.h"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::hash_generator_testing
+    basic::hash_policy_testing
+    gmock
+  TESTONLY
+)
+
+basic_cc_library(
+  NAME
+    unordered_set_constructor_test
+  HDRS
+    "internal/unordered_set_constructor_test.h"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::hash_generator_testing
+    basic::hash_policy_testing
+    gmock
+  TESTONLY
+)
+
+basic_cc_library(
+  NAME
+    unordered_set_lookup_test
+  HDRS
+    "internal/unordered_set_lookup_test.h"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::hash_generator_testing
+    basic::hash_policy_testing
+    gmock
+  TESTONLY
+)
+
+basic_cc_library(
+  NAME
+    unordered_set_members_test
+  HDRS
+    "internal/unordered_set_members_test.h"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::type_traits
+    gmock
+  TESTONLY
+)
+
+basic_cc_library(
+  NAME
+    unordered_set_modifiers_test
+  HDRS
+    "internal/unordered_set_modifiers_test.h"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::hash_generator_testing
+    basic::hash_policy_testing
+    gmock
+  TESTONLY
+)
+
+basic_cc_test(
+  NAME
+    unordered_set_test
+  SRCS
+    "internal/unordered_set_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::unordered_set_constructor_test
+    basic::unordered_set_lookup_test
+    basic::unordered_set_members_test
+    basic::unordered_set_modifiers_test
+    gmock_main
+)
+
+basic_cc_test(
+  NAME
+    unordered_map_test
+  SRCS
+    "internal/unordered_map_test.cc"
+  COPTS
+    ${ABSL_TEST_COPTS}
+  DEPS
+    basic::unordered_map_constructor_test
+    basic::unordered_map_lookup_test
+    basic::unordered_map_members_test
+    basic::unordered_map_modifiers_test
+    gmock_main
+)
